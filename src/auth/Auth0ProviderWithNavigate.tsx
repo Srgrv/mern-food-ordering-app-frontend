@@ -1,4 +1,4 @@
-import { Auth0Provider } from "@auth0/auth0-react";
+import { AppState, Auth0Provider } from "@auth0/auth0-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,9 +17,9 @@ const Auth0ProviderWithNavigate: React.FC<TProps> = ({ children }) => {
     throw new Error("Unable to initalise auth");
   }
 
-  const onRedirectCallback = () => {
+  const onRedirectCallback = (appState?: AppState) => {
     // console.log(user?.sub, user?.email);
-    navigate("/auth-callback");
+    navigate(appState?.returnTo || "/auth-callback");
   };
 
   return (
