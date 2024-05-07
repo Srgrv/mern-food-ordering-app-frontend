@@ -26,10 +26,7 @@ const Auth0ProviderWithNavigate: React.FC<TProps> = ({ children }) => {
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      authorizationParams={{
-        redirectUri: window.location.origin,
-        audience,
-      }}
+      authorizationParams={{ redirectUri: redirectUri, audience }}
       onRedirectCallback={onRedirectCallback}
     >
       {children}
