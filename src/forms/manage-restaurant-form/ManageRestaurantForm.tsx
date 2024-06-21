@@ -82,8 +82,6 @@ const ManageRestaurantForm: React.FC<TProps> = ({ onSave, isLoading }) => {
   const onSubmit = (formDataJson: RestaurantFormData) => {
     // TODO - convert formDataJson to a new FormData object
 
-    console.log(formDataJson);
-
     const formData = new FormData();
 
     formData.append("restaurantName", formDataJson.restaurantName);
