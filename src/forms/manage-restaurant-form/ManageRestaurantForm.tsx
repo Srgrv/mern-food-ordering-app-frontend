@@ -1,6 +1,6 @@
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,6 +12,7 @@ import MenuSection from "./MenuSection";
 import ImageSection from "./ImageSection";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+import { Restaurant } from "@/types";
 
 // Этот код использует библиотеку zod для определения схемы данных и валидации значений формы согласно этой схеме. Он помогает обеспечить правильный ввод данных пользователем и предотвращает отправку некорректных данных на сервер.
 
@@ -63,11 +64,16 @@ const formSchema = z
 type RestaurantFormData = z.infer<typeof formSchema>;
 
 type TProps = {
+  restaurant?: Restaurant;
   onSave: (restaurantFormData: FormData) => void;
   isLoading: boolean;
 };
 
-const ManageRestaurantForm: React.FC<TProps> = ({ onSave, isLoading }) => {
+const ManageRestaurantForm: React.FC<TProps> = ({
+  restaurant,
+  onSave,
+  isLoading,
+}) => {
   // useForm<restaurantFormData> - Эта функция useForm используется для создания экземпляра формы. restaurantFormData представляет тип данных, который используется для типизации данных формы. Это позволяет библиотеке лучше управлять типами данных, связанными с формой.
   const form = useForm<RestaurantFormData>({
     // resolver: zodResolver(formSchema) - Это свойство resolver определяет, как будет происходить валидация данных формы. В данном случае, zodResolver используется для создания резолвера, который использует схему данных formSchema, определенную с помощью библиотеки Zod, для валидации данных формы.
@@ -78,6 +84,30 @@ const ManageRestaurantForm: React.FC<TProps> = ({ onSave, isLoading }) => {
       menuItems: [{ name: "", price: 0 }],
     },
   });
+
+  useEffect(() => {
+    if (!restaurant) {
+      return;
+    }
+
+    // toFixed преобразует в строку с фиксированным количеством знаков после запятой = 2
+    const deliveryPriceFormatted = parseInt(
+      (restaurant.deliveryPrice / 100).toFixed(2)
+    );
+
+    const menuItemsFormatted = restaurant.menuItems.map((item) => ({
+      ...item,
+      price: parseInt((item.price / 100).toFixed(2)),
+    }));
+
+    const updatedRestaurant = {
+      ...restaurant,
+      deliveryPrice: deliveryPriceFormatted,
+      menuItems: menuItemsFormatted,
+    };
+
+    form.reset(updatedRestaurant);
+  }, [form, restaurant]);
 
   const onSubmit = (formDataJson: RestaurantFormData) => {
     // TODO - convert formDataJson to a new FormData object
