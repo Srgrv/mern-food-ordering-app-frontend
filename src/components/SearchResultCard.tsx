@@ -37,7 +37,7 @@ const SearchResultCard: React.FC<TProps> = ({ restaurant }) => {
         <div id="card-content" className="grid md:grid-cols-2 gap-2">
           <div className="flex flex-row flex-wrap">
             {restaurant.cuisins.map((item, index) => (
-              <span className="flex">
+              <span className="flex" key={`${item}${index}`}>
                 {/*Типы кухни ресторана отображаются с использованием элемента span для каждого типа кухни. Между элементами типа кухни добавляется иконка Dot, кроме последнего элемента. */}
                 <span>{item}</span>
                 {index < restaurant.cuisins.length - 1 && <Dot />}
