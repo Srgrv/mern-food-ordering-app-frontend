@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,14 +29,27 @@ type TProps = {
   onSubmit: (formData: SearchForm) => void;
   placeHolder: string;
   onReset?: () => void;
+  searchQuery: string;
 };
 
-const SearchBar: React.FC<TProps> = ({ onSubmit, placeHolder, onReset }) => {
+const SearchBar: React.FC<TProps> = ({
+  onSubmit,
+  placeHolder,
+  onReset,
+  searchQuery,
+}) => {
   // useForm используется для управления состоянием формы и валидацией.
   // zodResolver связывает схему zod с react-hook-form.
   const form = useForm<SearchForm>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      searchQuery,
+    },
   });
+  // Использование useEffect для сброса значения searchQuery в форме при изменении входного параметра searchQuery. Это обеспечивает актуализацию начального значения формы при внешних изменениях.
+  useEffect(() => {
+    form.reset({ searchQuery });
+  }, [form, searchQuery]);
 
   // handleReset сбрасывает поле ввода searchQuery и вызывает функцию onReset, если она передана в пропсах.
   const handleReset = () => {
@@ -56,7 +69,7 @@ const SearchBar: React.FC<TProps> = ({ onSubmit, placeHolder, onReset }) => {
         // В форме обрабатывается отправка через form.handleSubmit(onSubmit).
         onSubmit={form.handleSubmit(onSubmit)}
         // Если валидация не пройдена, применяется класс border-red-500.
-        className={`flex items-center flex-1  gap-1 justify-between flex-row border-2 rounded-full p-3 mx-5 ${
+        className={`flex items-center flex-1  gap-1 justify-between flex-row border-2 rounded-full p-3 ${
           form.formState.errors.searchQuery && "border-red-500"
         }`}
       >
@@ -82,16 +95,14 @@ const SearchBar: React.FC<TProps> = ({ onSubmit, placeHolder, onReset }) => {
           )}
         />
 
-        {form.formState.isDirty && (
-          <Button
-            onClick={handleReset}
-            type="button"
-            variant="outline"
-            className="rounded-full"
-          >
-            Очистить
-          </Button>
-        )}
+        <Button
+          onClick={handleReset}
+          type="button"
+          variant="outline"
+          className="rounded-full"
+        >
+          Очистить
+        </Button>
         <Button type="submit" className="rounded-full bg-orange-500">
           Поиск
         </Button>
