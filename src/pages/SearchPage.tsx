@@ -8,10 +8,12 @@ import SearchBar, { SearchForm } from "@/components/SearchBar";
 
 // api hook
 import { useSearchRestaurants } from "@/api/RestaurantApi";
+import PaginationSelector from "@/components/PaginationSelector";
 
 // Тип SearchState определяет структуру состояния поиска, содержащего единственное свойство searchQuery, которое является строкой
 export type SearchState = {
   searchQuery: string;
+  page: number;
 };
 
 const SearchPage: React.FC = () => {
@@ -20,10 +22,19 @@ const SearchPage: React.FC = () => {
   // Используется useState для управления состоянием searchState, которое содержит строку запроса searchQuery.
   const [searchState, setSearchState] = useState<SearchState>({
     searchQuery: "",
+    page: 1,
   });
 
   // Хук useSearchRestaurants теперь использует searchState в качестве одного из своих аргументов. Это позволяет хуку реагировать на изменения поискового запроса и выполнять запрос к API с обновленными данными.
   const { results, isLoading } = useSearchRestaurants(searchState, city);
+
+  // Функция для изменения номера текущей страницы в состоянии поиска
+  const setPage = (page: number) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      page,
+    }));
+  };
 
   // Функция setSearchState вызывается с функцией, которая получает prevState (предыдущее состояние) и возвращает новый объект состояния. Спред-оператор ...prevState используется для сохранения всех предыдущих полей состояния, чтобы не потерять остальные данные.
   const setSearchQuery = (searchFromData: SearchForm) => {
@@ -31,6 +42,7 @@ const SearchPage: React.FC = () => {
       // Возвращаемый объект содержит все предыдущие поля состояния (...prevState) и обновляет searchQuery значением из searchFromData.searchQuery. Таким образом, функция обновляет только часть состояния, связанную с поисковым запросом.
       ...prevState,
       searchQuery: searchFromData.searchQuery,
+      page: 1,
     }));
   };
 
@@ -66,9 +78,17 @@ const SearchPage: React.FC = () => {
           searchQuery={searchState.searchQuery}
         />
         <SearchResultInfo total={results.pagination.total} city={city} />
-        {results.data.map((restaurant) => (
-          <SearchResultCard restaurant={restaurant} />
+        {results.data.map((restaurant, index) => (
+          <SearchResultCard
+            restaurant={restaurant}
+            key={`${restaurant}${index}`}
+          />
         ))}
+        <PaginationSelector
+          page={results.pagination.page}
+          pages={results.pagination.pages}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );
