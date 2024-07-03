@@ -5,15 +5,17 @@ import { useParams } from "react-router-dom";
 import SearchResultCard from "@/components/SearchResultCard";
 import SearchResultInfo from "@/components/SearchResultInfo";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
+import CuisineFilter from "@/components/CuisineFilter";
+import PaginationSelector from "@/components/PaginationSelector";
 
 // api hook
 import { useSearchRestaurants } from "@/api/RestaurantApi";
-import PaginationSelector from "@/components/PaginationSelector";
 
 // Тип SearchState определяет структуру состояния поиска, содержащего единственное свойство searchQuery, которое является строкой
 export type SearchState = {
   searchQuery: string;
   page: number;
+  selectedCuisins: string[];
 };
 
 const SearchPage: React.FC = () => {
@@ -23,10 +25,21 @@ const SearchPage: React.FC = () => {
   const [searchState, setSearchState] = useState<SearchState>({
     searchQuery: "",
     page: 1,
+    selectedCuisins: [],
   });
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   // Хук useSearchRestaurants теперь использует searchState в качестве одного из своих аргументов. Это позволяет хуку реагировать на изменения поискового запроса и выполнять запрос к API с обновленными данными.
   const { results, isLoading } = useSearchRestaurants(searchState, city);
+
+  const setSelectedCuisins = (selected: string[]) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      selectedCuisins: selected,
+      page: 1,
+    }));
+  };
 
   // Функция для изменения номера текущей страницы в состоянии поиска
   const setPage = (page: number) => {
@@ -68,7 +81,16 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
-      <div id="cuisins-list">Вставьте сюда кухни</div>
+      <div id="cuisins-list">
+        <CuisineFilter
+          selectedCuisins={searchState.selectedCuisins}
+          onChange={setSelectedCuisins}
+          isExpanded={isExpanded}
+          onExpandedClick={() =>
+            setIsExpanded((prevIsExpanded) => !prevIsExpanded)
+          }
+        />
+      </div>
       <div id="main-content" className="flex flex-col gap-5">
         {/*Добавлен компонент SearchBar и в него переданы свойства */}
         <SearchBar
