@@ -69,7 +69,7 @@ const SearchBar: React.FC<TProps> = ({
         // В форме обрабатывается отправка через form.handleSubmit(onSubmit).
         onSubmit={form.handleSubmit(onSubmit)}
         // Если валидация не пройдена, применяется класс border-red-500.
-        className={`flex items-center flex-1  gap-1 justify-between flex-row border-2 rounded-full p-3 ${
+        className={`flex items-center   gap-1 justify-between flex-row border-2 rounded-full p-3 ${
           form.formState.errors.searchQuery && "border-red-500"
         }`}
       >
