@@ -39,7 +39,6 @@ const SearchResultInfo: React.FC<TProps> = ({ total, city }) => {
           Изменить местоположение
         </Link>
       </span>
-      Вставьте сюда раскрывающийся список сортировки
     </div>
   );
 };
