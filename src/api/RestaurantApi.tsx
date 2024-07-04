@@ -19,6 +19,7 @@ export const useSearchRestaurants = (
     // Метод join(",") объединяет все элементы массива в одну строку, разделяя их запятыми.
     // Например, если searchState.selectedCuisins равен ["Italian", "Chinese", "Mexican"], результат будет "Italian,Chinese,Mexican".
     params.set("selectedCuisins", searchState.selectedCuisins.join(","));
+    params.set("sortOption", searchState.sortOption);
 
     const response = await fetch(
       `${API_BASE_URL}/api/restaurant/search/${city}?${params.toString()}`
