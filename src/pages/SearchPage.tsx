@@ -10,12 +10,14 @@ import PaginationSelector from "@/components/PaginationSelector";
 
 // api hook
 import { useSearchRestaurants } from "@/api/RestaurantApi";
+import SortOptionDropdown from "@/components/SortOptionDropdown";
 
 // Тип SearchState определяет структуру состояния поиска, содержащего единственное свойство searchQuery, которое является строкой
 export type SearchState = {
   searchQuery: string;
   page: number;
   selectedCuisins: string[];
+  sortOption: string;
 };
 
 const SearchPage: React.FC = () => {
@@ -26,9 +28,18 @@ const SearchPage: React.FC = () => {
     searchQuery: "",
     page: 1,
     selectedCuisins: [],
+    sortOption: "bestMatch",
   });
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  const setSortOption = (sortOption: string) => {
+    setSearchState((prevState) => ({
+      ...prevState,
+      sortOption,
+      page: 1,
+    }));
+  };
 
   // Хук useSearchRestaurants теперь использует searchState в качестве одного из своих аргументов. Это позволяет хуку реагировать на изменения поискового запроса и выполнять запрос к API с обновленными данными.
   const { results, isLoading } = useSearchRestaurants(searchState, city);
@@ -99,7 +110,14 @@ const SearchPage: React.FC = () => {
           onReset={resetSearch}
           searchQuery={searchState.searchQuery}
         />
-        <SearchResultInfo total={results.pagination.total} city={city} />
+        <div className="flex justify-between flex-col gap-3 lg:flex-row">
+          <SearchResultInfo total={results.pagination.total} city={city} />
+          <SortOptionDropdown
+            sortOption={searchState.sortOption}
+            onChange={(value) => setSortOption(value)}
+          />
+        </div>
+
         {results.data.map((restaurant, index) => (
           <SearchResultCard
             restaurant={restaurant}
