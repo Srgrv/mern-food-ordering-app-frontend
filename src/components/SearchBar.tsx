@@ -29,7 +29,7 @@ type TProps = {
   onSubmit: (formData: SearchForm) => void;
   placeHolder: string;
   onReset?: () => void;
-  searchQuery: string;
+  searchQuery?: string;
 };
 
 const SearchBar: React.FC<TProps> = ({
