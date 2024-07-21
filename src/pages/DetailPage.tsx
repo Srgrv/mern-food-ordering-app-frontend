@@ -63,6 +63,16 @@ const DetailPage: React.FC = () => {
     });
   };
 
+  const removeFromCart = (cartItem: CartItem) => {
+    setCartItems((prevCartItem) => {
+      const updatedCartItems = prevCartItem.filter(
+        (item) => cartItem._id !== item._id
+      );
+
+      return updatedCartItems;
+    });
+  };
+
   if (isLoading || !restaurant) {
     return "Загрузка...";
   }
@@ -90,7 +100,11 @@ const DetailPage: React.FC = () => {
         </div>
         <div className="">
           <Card>
-            <OrderSummary restaurant={restaurant} cartItems={cartItems} />
+            <OrderSummary
+              restaurant={restaurant}
+              cartItems={cartItems}
+              removeFromCart={removeFromCart}
+            />
           </Card>
         </div>
       </div>
