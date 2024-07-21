@@ -1,5 +1,8 @@
 import React from "react";
 
+//icons
+import { Trash } from "lucide-react";
+
 //types
 import { Restaurant } from "@/types";
 import { CartItem } from "@/pages/DetailPage";
@@ -10,9 +13,14 @@ import { Separator } from "./ui/separator";
 type TProps = {
   restaurant: Restaurant;
   cartItems: CartItem[];
+  removeFromCart: (cartItem: CartItem) => void;
 };
 
-const OrderSummary: React.FC<TProps> = ({ restaurant, cartItems }) => {
+const OrderSummary: React.FC<TProps> = ({
+  restaurant,
+  cartItems,
+  removeFromCart,
+}) => {
   // Функция для вычисления общей стоимости заказа
   const getTotalCost = () => {
     // Суммирование стоимости всех позиций в корзине
@@ -46,6 +54,12 @@ const OrderSummary: React.FC<TProps> = ({ restaurant, cartItems }) => {
               {item.name}
             </span>
             <span className="flex items-center gap-1">
+              <Trash
+                className="cursor-pointer"
+                color="red"
+                size={20}
+                onClick={() => removeFromCart(item)}
+              />
               ${((item.price * item.quantity) / 100).toFixed(2)}
             </span>
           </div>
