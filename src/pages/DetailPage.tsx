@@ -7,10 +7,11 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import RestaurantInto from "@/components/RestaurantInto";
 import Menu from "@/components/Menu";
 import OrderSummary from "@/components/OrderSummary";
-import { Card } from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 
 //types
 import { MenuItem } from "@/types";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export type CartItem = {
   _id: string;
@@ -23,7 +24,10 @@ const DetailPage: React.FC = () => {
   const { restaurantId } = useParams();
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
+    return storedCartItems ? JSON.parse(storedCartItems) : [];
+  });
 
   const addToCart = (menuItem: MenuItem): void => {
     setCartItems((prevCartItems) => {
@@ -59,6 +63,16 @@ const DetailPage: React.FC = () => {
       }
 
       // Функция setCartItems, предположительно, используется в контексте хуков React для обновления состояния cartItems. Мы возвращаем updatedCartItems из колбэк-функции, переданной setCartItems. Это обновленное состояние cartItems будет затем использовано для отображения или дальнейшей обработки в вашем приложении.
+
+      // sessionStorage.setItem: Это метод объекта sessionStorage, который позволяет установить значение для указанного ключа.
+      // cartItems-${restaurantId}: Это ключ, под которым будут сохранены данные. ${restaurantId} здесь представляет переменную или значение идентификатора ресторана, которое используется для уникальности ключа в sessionStorage
+      // JSON.stringify(updatedCartItems): updatedCartItems - это переменная или объект, который будет сохранен в sessionStorage. Прежде чем сохранить его, он преобразуется в строку JSON с помощью функции JSON.stringify. Это необходимо, потому что sessionStorage может хранить только строки.
+      // Это позволяет приложению сохранять состояние корзины пользователя между различными страницами или обновлениями страницы в пределах одного сеанса работы пользователя с веб-приложением.
+      sessionStorage.setItem(
+        `cartItems-${restaurantId}`,
+        JSON.stringify(updatedCartItems)
+      );
+
       return updatedCartItems;
     });
   };
@@ -67,6 +81,11 @@ const DetailPage: React.FC = () => {
     setCartItems((prevCartItem) => {
       const updatedCartItems = prevCartItem.filter(
         (item) => cartItem._id !== item._id
+      );
+
+      sessionStorage.setItem(
+        `cartItems-${restaurantId}`,
+        JSON.stringify(updatedCartItems)
       );
 
       return updatedCartItems;
@@ -105,6 +124,9 @@ const DetailPage: React.FC = () => {
               cartItems={cartItems}
               removeFromCart={removeFromCart}
             />
+            <CardFooter>
+              <CheckoutButton />
+            </CardFooter>
           </Card>
         </div>
       </div>
