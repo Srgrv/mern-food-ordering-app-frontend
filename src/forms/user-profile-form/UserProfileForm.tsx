@@ -30,7 +30,7 @@ const formSchema = z.object({
 });
 
 // определяем тип схемы с помощью специальный утилиты z.infer
-type UserFormData = z.infer<typeof formSchema>;
+export type UserFormData = z.infer<typeof formSchema>;
 
 // опредлеяем тип пропсов
 type Props = {
@@ -58,9 +58,9 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
         className="space-y-4 bg-gray-50 rounded-lg md:p-10"
       >
         <div>
-          <h2 className="text-2xl font-bold">User Profile Form</h2>
+          <h2 className="text-2xl font-bold">Данные пользователя</h2>
           <FormDescription>
-            View and change your profile information here
+            Проверить и изменить информацию своего профиля можно здесь
           </FormDescription>
         </div>
         <FormField
@@ -68,7 +68,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Почта</FormLabel>
               <FormControl>
                 <Input {...field} disabled className="bg-white" />
               </FormControl>
@@ -80,7 +80,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Имя</FormLabel>
               <FormControl>
                 <Input {...field} className="bg-white" />
               </FormControl>
@@ -94,7 +94,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
             name="addressLine1"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Address Line 1</FormLabel>
+                <FormLabel>Адрес</FormLabel>
                 <FormControl>
                   <Input {...field} className="bg-white" />
                 </FormControl>
@@ -107,7 +107,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
             name="city"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>City</FormLabel>
+                <FormLabel>Город</FormLabel>
                 <FormControl>
                   <Input {...field} className="bg-white" />
                 </FormControl>
@@ -120,7 +120,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
             name="country"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Country</FormLabel>
+                <FormLabel>Страна</FormLabel>
                 <FormControl>
                   <Input {...field} className="bg-white" />
                 </FormControl>
