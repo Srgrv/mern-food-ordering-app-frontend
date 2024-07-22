@@ -37,9 +37,17 @@ type Props = {
   onSave: (userProfileData: UserFormData) => void;
   isLoading: boolean;
   currentUser: User;
+  title?: string;
+  buttonText?: string;
 };
 
-export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
+export const UserProfileForm = ({
+  onSave,
+  isLoading,
+  currentUser,
+  title = "Данные профиля",
+  buttonText = "Отправить",
+}: Props) => {
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: currentUser,
@@ -58,7 +66,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
         className="space-y-4 bg-gray-50 rounded-lg md:p-10"
       >
         <div>
-          <h2 className="text-2xl font-bold">Данные пользователя</h2>
+          <h2 className="text-2xl font-bold">{title}</h2>
           <FormDescription>
             Проверить и изменить информацию своего профиля можно здесь
           </FormDescription>
@@ -133,7 +141,7 @@ export const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
           <LoadingButton />
         ) : (
           <Button type="submit" className="bg-orange-500">
-            Submit
+            {buttonText}
           </Button>
         )}
       </form>

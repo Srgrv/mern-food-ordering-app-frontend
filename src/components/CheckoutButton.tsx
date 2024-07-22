@@ -78,6 +78,8 @@ const CheckoutButton: React.FC<TProps> = ({ onCheckout, disabled }) => {
             currentUser={currentUser}
             onSave={onCheckout}
             isLoading={isGetUserLoading}
+            title="Подтвердить детали"
+            buttonText="Продолжить оплату"
           />
         </DialogHeader>
       </DialogContent>
