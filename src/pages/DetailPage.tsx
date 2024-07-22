@@ -12,6 +12,7 @@ import { Card, CardFooter } from "@/components/ui/card";
 //types
 import { MenuItem } from "@/types";
 import CheckoutButton from "@/components/CheckoutButton";
+import { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
 
 export type CartItem = {
   _id: string;
@@ -92,6 +93,10 @@ const DetailPage: React.FC = () => {
     });
   };
 
+  const onCheckout = (userFormData: UserFormData) => {
+    console.log("userFormData", userFormData);
+  };
+
   if (isLoading || !restaurant) {
     return "Загрузка...";
   }
@@ -125,7 +130,10 @@ const DetailPage: React.FC = () => {
               removeFromCart={removeFromCart}
             />
             <CardFooter>
-              <CheckoutButton />
+              <CheckoutButton
+                disabled={cartItems.length === 0}
+                onCheckout={onCheckout}
+              />
             </CardFooter>
           </Card>
         </div>
